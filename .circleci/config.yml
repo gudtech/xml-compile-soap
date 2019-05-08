@@ -1,0 +1,21 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: perl:5.28.1
+    steps:
+      - checkout
+      - run:
+          name: "Install CPAN dependencies and build"
+          command: |
+            export PERL_MM_USE_DEFAULT=1
+            cpan App::mymeta_requires
+            perl Makefile.PL
+            cpan $(mymeta-requires)
+            make
+      - run:
+          name: "Run Test Suite"
+          command: |
+            make test
+
